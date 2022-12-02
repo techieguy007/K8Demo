@@ -1,0 +1,20 @@
+# spinning up api and client
+services:
+  # api service (api service provides cpu and ram data to the api client)
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: sysstats-api
+    ports:
+      - "5000:5000"
+  # api client service (api client service is actually react app which fetches data from api service and displays it)
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    image: sysstats-client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api

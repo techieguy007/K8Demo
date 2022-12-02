@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: sysstats
+    labels:
+        app: sysstats
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: sysstats-client
+    namespace: sysstats
+    labels:
+        app: sysstats-client
+        type: front-end
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: sysstats-client
+            type: front-end
+    template:
+        metadata:
+            name: sysstats-client-pod
+            labels:
+                app: sysstats-client
+                type: front-end
+        spec:
+            containers:
+                - name: sysstats-client
+                  image: techieguy007/images:sysstats-client
+                  imagePullPolicy: Always
+                  ports:
+                      - containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: sysstats-client-service
+    labels:
+        svc: sysstats-client
+spec:
+    type: NodePort
+    ports:
+        - protocol: TCP
+          port: 8080
+          targetPort: 3000
+          nodePort: 30082
+    selector:
+        app: sysstats-client
+        type: front-end

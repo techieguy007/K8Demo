@@ -1,0 +1,11 @@
+#using python 3.10 base image
+FROM python:3.10
+#set working directory
+WORKDIR /app
+#copy requirements.txt and application file to the working directory
+COPY api/requirements.txt api/api.py ./
+#install python dependencies
+RUN pip install -r ./requirements.txt
+#run the application
+EXPOSE 5000
+CMD ["gunicorn", "-b", ":5000", "api:app"]
